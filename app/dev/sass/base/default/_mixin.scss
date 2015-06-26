@@ -1,0 +1,165 @@
+@mixin inline-block{
+	display: inline-block;  
+    *display: inline;  
+    *zoom: 1;
+}
+
+@mixin rem($size,$base:10) {
+	font-size: $size + px;
+	font-size: ($size / $base) + rem;
+}
+
+@mixin placeholder($color,$size){
+	&::placeholder {
+		color: $color;
+		@include rem($size);
+		@extend %font_main;
+	}
+}
+
+@mixin retina{
+	@media (-webkit-min-device-pixel-ratio: 2),(min-resolution: 2dppx) {
+		@content;
+	}
+}
+
+@mixin query($size){
+	@media all and (max-width: $size + px) {
+		@content;
+	}
+}
+
+@mixin grid($name) {
+	@for $n from 1 to $gridColumns + 1 {
+		.col_#{$name}_#{$n} {
+			@include columns($n);
+		}
+		.col_#{$name}_offset_#{$n} {
+			@include offset($n);
+		}
+	}
+	.col_#{$name}_one_thirds {
+		@include columns($gridColumns / 3);
+	}
+	.col_#{$name}_two_thirds {
+		@include columns($gridColumns / 3 * 2);
+	}
+	.col_#{$name}_one_thirds_offset {
+		@include offset($gridColumns /3 );
+	}
+	.col_#{$name}_two_thirds_offset {
+		@include offset($gridColumns / 3 * 2);
+	}
+}
+
+@mixin use-grid {
+	.row {
+		@include grid("xs");
+		@if $size-s != 0 {
+			// Mobile small
+			@media (min-width: $size-s) {
+				@include grid("s");
+			}
+		}
+		@if $size-md != 0 {
+			// Mobile middle
+			@media (min-width: $size-md) {
+				@include grid("md");
+			}
+		}
+		@if $size-l != 0 {
+			// Mobile large
+			@media (min-width: $size-l) {
+				@include grid("l");
+			}
+		}
+		@if $size-xl != 0 {
+			// Mobile xtra large
+			@media (min-width: $size-xl) {
+				@include grid("xl");
+			}
+		}
+		.right {
+			float: right;
+		}
+	}
+}
+// Button variants
+//
+// Easily pump out default styles, as well as :hover, :focus, :active,
+// and disabled options for all buttons
+
+@mixin button-variant($color, $background, $border) {
+  color: $color;
+  background-color: $background;
+  border-color: $border;
+
+  &:hover,
+  &:focus,
+  &.focus,
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    color: $color;
+    background-color: darken($background, 10%);
+        border-color: darken($border, 12%);
+  }
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: $background;
+          border-color: $border;
+    }
+  }
+
+  .badge {
+    color: $background;
+    background-color: $color;
+  }
+}
+@mixin transition($transition-property, $transition-time, $method) {
+    -webkit-transition: $transition-property $transition-time $method;
+    -moz-transition: $transition-property $transition-time $method;
+    -ms-transition: $transition-property $transition-time $method;
+    -o-transition: $transition-property $transition-time $method;
+    transition: $transition-property $transition-time $method;
+}
+// Responsive image
+//
+// Keep images from scaling beyond the width of their parents.
+@mixin img-responsive($display: block) {
+  display: $display;
+  max-width: 100%; // Part 1: Set a maximum relative to the parent
+  height: auto; // Part 2: Scale the height according to the width, otherwise you get stretching
+}
+
+
+//Clearfix
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// Center-align a block level element
+@mixin center-block() {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
